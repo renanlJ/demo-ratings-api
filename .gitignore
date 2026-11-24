@@ -1,0 +1,6 @@
+ratings-api
+coverage.out
+coverage.html
+*.test
+*.log
+.DS_Store

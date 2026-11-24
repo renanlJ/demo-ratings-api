@@ -1,0 +1,39 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-ratings-api
+  description: >
+    Product ratings service (Go, standard library only) — numerical 1-5
+    ratings, averages and distributions per product.
+  tags:
+    - demo-commerce
+    - lang-go
+    - framework-stdlib
+    - app-backend-api
+    - criticality-medium
+    - runtime-go
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/platform-team
+  system: demo-commerce
+  providesApis:
+    - ratings-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ratings-api
+  description: Product ratings REST API.
+  tags:
+    - api-rest
+    - demo-commerce
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:default/platform-team
+  system: demo-commerce
+  definition:
+    $text: ./docs/api/openapi.yaml

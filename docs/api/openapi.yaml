@@ -1,0 +1,82 @@
+openapi: 3.1.0
+info:
+  title: demo-ratings-api
+  version: 0.1.0
+  description: >
+    Product ratings service for the Demo Commerce Platform. Returns 1-5
+    star averages, counts and per-star distributions per product.
+servers:
+  - url: http://localhost:8083
+tags:
+  - name: ratings
+    description: Product ratings.
+  - name: platform
+    description: Health, readiness and metrics.
+paths:
+  /api/v1/ratings:
+    get:
+      operationId: listRatings
+      summary: List rating summaries for every product.
+      tags: [ratings]
+      responses:
+        "200":
+          description: All rating summaries.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RatingSummary"
+  /api/v1/ratings/{productId}:
+    get:
+      operationId: getRating
+      summary: Rating summary for a single product.
+      tags: [ratings]
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^SKU-[0-9]+$"
+      responses:
+        "200":
+          description: Rating summary.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RatingSummary"
+        "404":
+          description: Unknown product.
+  /healthz:
+    get:
+      operationId: healthz
+      summary: Liveness probe.
+      tags: [platform]
+      responses:
+        "200":
+          description: Process is alive.
+  /readyz:
+    get:
+      operationId: readyz
+      summary: Readiness probe.
+      tags: [platform]
+      responses:
+        "200":
+          description: Service is ready.
+        "503":
+          description: Not ready (fail-readiness scenario enabled).
+components:
+  schemas:
+    RatingSummary:
+      type: object
+      required: [productId, average, count, distribution]
+      properties:
+        productId: {type: string, example: SKU-1001}
+        average: {type: number, format: double, example: 4.43}
+        count: {type: integer, example: 7}
+        distribution:
+          type: object
+          additionalProperties: {type: integer}
+          description: Count of ratings per star value ("1".."5").
+          example: {"1": 0, "2": 0, "3": 1, "4": 2, "5": 4}

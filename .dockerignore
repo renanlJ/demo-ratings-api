@@ -1,0 +1,9 @@
+.git
+.github
+docs
+deploy
+Dockerfile
+.dockerignore
+*.md
+ratings-api
+coverage.out
